@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour {
 
     public float SprintModifier = 2.5f;
 
+    public GameObject Cam;
+
     public Vector3 IP; // Movement Input
 
     States CurrentState;
@@ -36,27 +38,33 @@ public class PlayerController : MonoBehaviour {
         IP.z = Input.GetAxisRaw("Vertical");
     }
 
-    public void doMovement(float DeltaTime, Vector3 MoveInput)
+    public void doMovement(float DeltaTime, Vector3 MoveInput, Transform DirTrans)
     {
         if (RB != null)
         {
-            //RB.AddForce(MoveInput * MovementSpeed * DeltaTime);
-            float StoredYVelocity = RB.velocity.y;
-            Vector3 NewVelocity = MoveInput * MovementSpeed * DeltaTime;
-            Vector3 Vel = new Vector3(NewVelocity.x, StoredYVelocity, NewVelocity.z);
-            RB.velocity = Vel;
+            Vector3 Forward = DirTrans.forward * IP.z;
+            Forward.y = 0;
+            Forward.Normalize();
+
+            Vector3 Right = DirTrans.right * IP.x;
+
+            RB.AddForce(Forward * MovementSpeed * DeltaTime);
+            RB.AddForce(Right * MovementSpeed * DeltaTime);
         }
     }
 
-    public void doMovementSprint(float DeltaTime, Vector3 MoveInput)
+    public void doMovementSprint(float DeltaTime, Vector3 MoveInput, Transform DirTrans)
     {
         if (RB != null)
         {
-            //RB.AddForce(MoveInput * MovementSpeed * DeltaTime);
-            float StoredYVelocitySprint = RB.velocity.y;
-            Vector3 NewVelocitySprint = MoveInput * MovementSpeed * DeltaTime * SprintModifier;
-            Vector3 VelSprint = new Vector3(NewVelocitySprint.x, StoredYVelocitySprint, NewVelocitySprint.z);
-            RB.velocity = VelSprint;
+            Vector3 Forward = DirTrans.forward * IP.z;
+            Forward.y = 0;
+            Forward.Normalize();
+
+            Vector3 Right = DirTrans.right * IP.x;
+
+            RB.AddForce(Forward * MovementSpeed * DeltaTime * SprintModifier);
+            RB.AddForce(Right * MovementSpeed * DeltaTime * SprintModifier);
         }
     }
 
@@ -72,12 +80,12 @@ public class PlayerController : MonoBehaviour {
 
     public void doMovementState()
     {
-        doMovement(DT,IP);
+        doMovement(DT,IP, Cam.transform);
     }
 
     public void doMovementStateSprint()
     {
-        doMovementSprint(DT, IP);
+        doMovementSprint(DT, IP, Cam.transform);
     }
 
     public void doCombatState()
