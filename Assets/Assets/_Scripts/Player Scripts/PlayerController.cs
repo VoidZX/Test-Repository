@@ -76,17 +76,27 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    public void doFire()
+    {
+
+            GameObject temp = Instantiate(Bullet, transform.position, transform.rotation);
+
+            BulletController TempBC = temp.GetComponent<BulletController>();
+
+            temp.GetComponent<Rigidbody>().velocity = transform.forward * TempBC.BulletSpeed;
+            attackDelay = TempBC.BulletDelay;
+
+        TempBC.Owner = gameObject;
+    }
+
     public void doCombat()
     {
         doMovementState();
 
         attackDelay -= Time.deltaTime;
-
-        if(attacking && attackDelay <= 0.0f)
+        if (attacking && attackDelay <= 0.0f)
         {
-            GameObject temp = Instantiate(Bullet, transform.position, transform.rotation);
-            temp.GetComponent<Rigidbody>().velocity = transform.forward * 20;
-            attackDelay = setAttackDelay;
+            doFire();
         }
     }
 
