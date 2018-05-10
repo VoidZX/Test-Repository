@@ -22,7 +22,7 @@ public class HealthComponent : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-    //if (currentHealth >> maxHealth)
+        //if (currentHealth >> maxHealth)
 
     if (currentHealth <= 0)
         {
@@ -30,7 +30,7 @@ public class HealthComponent : MonoBehaviour {
         }
     else
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(true);  //TODO: remove for release
         }
 		
 	}
